@@ -13,6 +13,10 @@ Color StripModeSolid::GetColor() {
 	return strip->GetColor(0);
 }
 
+void StripModeSolid::Display() {
+	strip->Display();
+}
+
 /*
 StripModeDissipate::StripModeDissipate(int size, int centerSize, double speed) :
 					StripMode(size) {

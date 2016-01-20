@@ -13,6 +13,8 @@ public:
 
 	void SetColor(Color const& c);
 	Color GetColor();
+
+	void Display();
 };
 
 class StripModeDissipate : public StripMode

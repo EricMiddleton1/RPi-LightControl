@@ -2,6 +2,7 @@
 #define LIGHTSTRIP_H
 
 #include "Color.h"
+#include "SPI.h"
 #include <exception>
 #include <string>
 #include <vector>
@@ -26,6 +27,8 @@ public:
 	Color GetColor(int id);
 
 	void DumpColors(unsigned char colorArray[]);
+
+	void Display();
 private:
 	std::vector<Color> colors;
 	int size;
