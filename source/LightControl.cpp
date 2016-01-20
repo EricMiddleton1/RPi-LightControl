@@ -55,7 +55,7 @@ int main() {
 				g = 255;
 
 			if(b > 255)
-				g = 255;
+				b = 255;
 
 			strip.Set(i, Color(r, g, b));
 		}
