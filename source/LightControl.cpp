@@ -1,40 +1,75 @@
 #define LED_COUNT		300
+#define WELL_COUNT		5
 
 #include <vector>
 #include <iostream>
 #include <stdint.h>
 #include <bcm2835.h>
 #include <cmath>
-#include "StripModes.h"
+#include "LightStrip.h"
+#include "ColorWell.h"
 
 uint64_t Millis() {
 	return bcm2835_st_read() / 1000;
 }
 
 int main() {
-	uint64_t nextTime;
-	int updateCount = 0;
+	std::vector<ColorWell> wells;
+	LightStrip strip(LED_COUNT);
 
-	StripModeSolid strip(LED_COUNT, Color(0, 0, 0));
+	for(int i = 0; i < WELL_COUNT; i++) {
+		//wells.push_back(ColorWell(Color(0, 255, 0), 5, 5, 0, 20));
+		wells.push_back(ColorWell(LED_COUNT));
+	}
 
-	strip.Display();
+	uint64_t lastTime = Millis();
 
-	nextTime = Millis() + 1000;
 	while(1) {
-		float hue = std::fmod(36.f * Millis() / 1000.f, 360.f);
+		uint64_t thisTime = Millis();
+		float dt = (thisTime - lastTime) / 1000.f;
 
-		strip.SetColor(Color::HSL(hue, 1.f, 0.5f));
+		lastTime = thisTime;
+
+		for(int i = 0; i < LED_COUNT; i++) {
+			float r = 0, g = 0, b = 0;
+			for(int j = 0; j < WELL_COUNT; j++) {
+				float distance = std::abs(i - wells[j].GetPos()) - wells[j].GetRadius();
+				Color c = wells[j].GetColor();
+
+				if(distance < 1)
+					distance = 1;
+
+				float strength = wells[j].GetMass() / (distance * distance);
+
+				if(strength > 1)
+					strength = 1;
+
+				r += strength * c.GetRed();
+				g += strength * c.GetGreen();
+				b += strength * c.GetBlue();
+			}
+			if(r > 255)
+				r = 255;
+
+			if(g > 255)
+				g = 255;
+
+			if(b > 255)
+				g = 255;
+
+			strip.Set(i, Color(r, g, b));
+		}
 
 		strip.Display();
 
-		updateCount++;
+		for(int i = 0; i < WELL_COUNT; i++) {
+			wells[i].Update(dt);
 
-		uint64_t currentTime = Millis();
-		if(currentTime >= nextTime) {
-			std::cout << updateCount << " fps" << std::endl;
+			float pos = wells[i].GetPos();
 
-			updateCount = 0;
-			nextTime = currentTime + 1000;
+			if(pos < 0 || pos >= LED_COUNT) {
+				wells[i] = ColorWell(LED_COUNT);
+			}
 		}
 	}
 

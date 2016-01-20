@@ -8,8 +8,8 @@ VPATH=source
 
 all: LightControl
 
-LightControl: SPI.o LightControl.o Color.o LightStrip.o StripModes.o
-		g++ $(CFLAGS) Color.o LightStrip.o StripModes.o SPI.o LightControl.o -o LightControl -lbcm2835
+LightControl: SPI.o LightControl.o Color.o LightStrip.o StripModes.o ColorWell.o
+		g++ $(CFLAGS) Color.o LightStrip.o StripModes.o SPI.o ColorWell.o LightControl.o -o LightControl -lbcm2835
 
 SPI.o: $(srcdir)/SPI.c
 	g++ $(CFLAGS) -c $(srcdir)/SPI.c
@@ -25,6 +25,9 @@ Color.o: $(srcdir)/Color.cpp
 
 StripModes.o: $(srcdir)/StripModes.cpp
 	g++ $(CFLAGS) -c $(srcdir)/StripModes.cpp
+
+ColorWell.o: $(srcdir)/ColorWell.cpp
+	g++ $(CFLAGS) -c $(srcdir)/ColorWell.cpp
 
 clean:
 	rm *o LightControl
