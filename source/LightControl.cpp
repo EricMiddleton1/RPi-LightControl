@@ -1,4 +1,4 @@
-#define LED_COUNT		300
+#define LED_COUNT		240
 #define WELL_COUNT		10
 
 #include <vector>
