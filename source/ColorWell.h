@@ -2,6 +2,7 @@
 #define COLORWELL_H
 
 #include "Color.h"
+#include <cmath>
 
 class ColorWell
 {

@@ -1,5 +1,5 @@
 #define LED_COUNT		300
-#define WELL_COUNT		5
+#define WELL_COUNT		10
 
 #include <vector>
 #include <iostream>
@@ -16,6 +16,8 @@ uint64_t Millis() {
 int main() {
 	std::vector<ColorWell> wells;
 	LightStrip strip(LED_COUNT);
+
+	srand(bcm2835_st_read());
 
 	for(int i = 0; i < WELL_COUNT; i++) {
 		//wells.push_back(ColorWell(Color(0, 255, 0), 5, 5, 0, 20));
@@ -39,7 +41,7 @@ int main() {
 				if(distance < 1)
 					distance = 1;
 
-				float strength = wells[j].GetMass() / (distance * distance);
+				float strength = wells[j].GetMass() / (distance * distance * distance);
 
 				if(strength > 1)
 					strength = 1;
